@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+       default-autowire="byName">
+   
+	<!-- 自动扫面com.springmvc目录及其子目录下面所有类文件，自动注入所有带注解的类 -->
+	<context:component-scan base-package="com.*" />
+	<!--  
+	<bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource" >
+		<property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=bikai" />
+		<property name="username" value="sa" />
+		<property name="password" value="123" />		
+	</bean>-->
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		  destroy-method="close">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+		<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=heating"/>
+		<property name="username" value="sa"/>
+		<property name="password" value="123"/>
+	</bean>
+			<!--配置spring mybatis数据访问接口扫描包-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.dao"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	   <bean id="sqlSessionFactory"
+		  class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath*:mapping/*.mapper.xml"/>
+	</bean>
+	<!-- 数据源配置，不多说 -->
+<!-- 	 <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" /> -->
+<!-- 		<property name="jdbcUrl" value="jdbc:sqlserver://localhost:1433;databaseName=bikai" /> -->
+<!-- 		<property name="user" value="sa" /> -->
+<!-- 		<property name="password" value="123" /> -->
+<!-- 		<property name="acquireIncrement" value="5"/> -->
+<!-- 		<property name="preferredTestQuery" value="select count(1) from dual limit 1"/> -->
+<!-- 		<property name="checkoutTimeout" value="20000"/> -->
+<!-- 		<property name="idleConnectionTestPeriod" value="60"/> -->
+<!-- 		<property name="initialPoolSize" value="10"/> -->
+<!-- 		<property name="maxIdleTime" value="120"/> -->
+<!-- 		<property name="maxPoolSize" value="50"/> -->
+<!-- 		<property name="maxStatements" value="100"/> -->
+<!-- 		<property name="numHelperThreads" value="3"/> -->
+<!-- 		<property name="testConnectionOnCheckin" value="true"/>  -->
+<!-- 	</bean> -->
+
+	<!--  springmvc 自带jdbc	 --> 
+<!-- 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"> -->
+<!-- 		<property name="dataSource"> -->
+<!-- 			<ref bean="dataSource1" /> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="dataSourceTransactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   -->
+<!--         <constructor-arg ref="dataSource1" />   -->
+<!--     </bean>  -->
+
+<!-- 	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">   -->
+<!--         <constructor-arg ref="dataSourceTransactionManager" />   -->
+<!--     </bean>  -->
+
+<!-- 	<tx:annotation-driven transaction-manager="dataSourceTransactionManager" /> -->
+
+
+</beans>
